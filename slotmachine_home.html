@@ -1,0 +1,546 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎰 Lucky Slot Machine - Home</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #2C3E50, #34495E);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .home-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .home-card {
+            background: rgba(52, 73, 94, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            border: 3px solid #F39C12;
+        }
+
+        .home-title {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            color: #F39C12;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .welcome-message {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            color: #ECF0F1;
+        }
+
+        .user-info {
+            background: rgba(44, 62, 80, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .user-name {
+            font-size: 1.5em;
+            color: #F39C12;
+            margin-bottom: 10px;
+        }
+
+        .user-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            background: rgba(52, 73, 94, 0.6);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-title {
+            font-size: 1.3em;
+            color: #F39C12;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            color: #BDC3C7;
+            font-size: 0.9em;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #95A5A6;
+            border-radius: 8px;
+            background: #2C3E50;
+            color: white;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #F39C12;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #E74C3C, #C0392B);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn.success {
+            background: linear-gradient(45deg, #27AE60, #2ECC71);
+        }
+
+        .btn.warning {
+            background: linear-gradient(45deg, #F39C12, #E67E22);
+        }
+
+        .btn.secondary {
+            background: linear-gradient(45deg, #95A5A6, #7F8C8D);
+        }
+
+        .message {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+        }
+
+        .message.success {
+            background: rgba(39, 174, 96, 0.3);
+            color: #2ECC71;
+            border: 1px solid #27AE60;
+        }
+
+        .message.error {
+            background: rgba(231, 76, 60, 0.3);
+            color: #E74C3C;
+            border: 1px solid #E74C3C;
+        }
+
+        .message.info {
+            background: rgba(52, 152, 219, 0.3);
+            color: #3498DB;
+            border: 1px solid #3498DB;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .game-link {
+            display: inline-block;
+            background: linear-gradient(45deg, #F39C12, #E67E22);
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .game-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .logout-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(189, 195, 199, 0.3);
+        }
+
+        .guest-login {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(44, 62, 80, 0.6);
+            border-radius: 10px;
+            border: 1px solid #95A5A6;
+        }
+
+        .guest-login h3 {
+            color: #95A5A6;
+            font-size: 1em;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .home-card {
+                padding: 20px;
+            }
+            
+            .home-title {
+                font-size: 2em;
+            }
+            
+            .user-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="home-container">
+        <div class="home-card">
+            <h1 class="home-title">🎰 Lucky Slot Machine</h1>
+            
+            <!-- Welcome Section -->
+            <div id="welcomeSection">
+                <p class="welcome-message">Welcome to the ultimate slot machine experience!</p>
+                <button class="btn success" onclick="checkForSavedUser()">🎮 Start Playing</button>
+                <button class="btn secondary" onclick="showRegistration()">📝 Create Account</button>
+                <button class="btn secondary" onclick="showLogin()">🔑 Login</button>
+                
+                <div class="guest-login">
+                    <h3>🎲 Quick Play</h3>
+                    <p style="font-size: 0.9em; color: #BDC3C7; margin-bottom: 15px;">
+                        Play as guest without saving progress
+                    </p>
+                    <button class="btn warning" onclick="playAsGuest()">🎯 Play as Guest</button>
+                </div>
+            </div>
+
+            <!-- User Info Section -->
+            <div id="userSection" class="hidden">
+                <div class="user-info">
+                    <div class="user-name" id="userName">Player</div>
+                    <div class="user-stats">
+                        <div class="stat-item">
+                            <div>💰 Balance</div>
+                            <div id="userBalance">$1000</div>
+                        </div>
+                        <div class="stat-item">
+                            <div>🎯 Total Spins</div>
+                            <div id="userSpins">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div>🏆 Wins</div>
+                            <div id="userWins">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div>📊 Win Rate</div>
+                            <div id="userWinRate">0%</div>
+                        </div>
+                    </div>
+                    <button class="game-link" onclick="startGame()">🎰 Play Now!</button>
+                </div>
+                
+                <div class="logout-section">
+                    <button class="btn secondary" onclick="logout()">🚪 Logout</button>
+                    <button class="btn warning" onclick="deleteAccount()">🗑️ Delete Account</button>
+                </div>
+            </div>
+
+            <!-- Registration Form -->
+            <div id="registrationSection" class="hidden">
+                <h2 class="form-title">📝 Create Account</h2>
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-input" id="regUsername" placeholder="Enter username" maxlength="20">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" id="regPassword" placeholder="Enter password" maxlength="20">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" class="form-input" id="regConfirmPassword" placeholder="Confirm password" maxlength="20">
+                </div>
+                <button class="btn success" onclick="register()">✅ Create Account</button>
+                <button class="btn secondary" onclick="showWelcome()">⬅️ Back</button>
+                <div id="regMessage"></div>
+            </div>
+
+            <!-- Login Form -->
+            <div id="loginSection" class="hidden">
+                <h2 class="form-title">🔑 Login</h2>
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-input" id="loginUsername" placeholder="Enter username">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" id="loginPassword" placeholder="Enter password">
+                </div>
+                <button class="btn success" onclick="login()">🔓 Login</button>
+                <button class="btn secondary" onclick="showWelcome()">⬅️ Back</button>
+                <div id="loginMessage"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // User management
+        let currentUser = null;
+        let isGuest = false;
+        let users = JSON.parse(localStorage.getItem('slotMachineUsers')) || {};
+        
+        // Check for saved user on page load
+        window.onload = function() {
+            checkForSavedUser();
+        };
+
+        function checkForSavedUser() {
+            const savedUser = localStorage.getItem('slotMachineCurrentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showUserSection();
+                loadUserData();
+            } else {
+                showWelcome();
+            }
+        }
+
+        function showWelcome() {
+            hideAllSections();
+            document.getElementById('welcomeSection').classList.remove('hidden');
+        }
+
+        function showRegistration() {
+            hideAllSections();
+            document.getElementById('registrationSection').classList.remove('hidden');
+        }
+
+        function showLogin() {
+            hideAllSections();
+            document.getElementById('loginSection').classList.remove('hidden');
+        }
+
+        function showUserSection() {
+            hideAllSections();
+            document.getElementById('userSection').classList.remove('hidden');
+        }
+
+        function hideAllSections() {
+            document.getElementById('welcomeSection').classList.add('hidden');
+            document.getElementById('userSection').classList.add('hidden');
+            document.getElementById('registrationSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.add('hidden');
+        }
+
+        function register() {
+            const username = document.getElementById('regUsername').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            const messageEl = document.getElementById('regMessage');
+
+            // Validation
+            if (!username || !password) {
+                showMessage(messageEl, 'Please fill in all fields', 'error');
+                return;
+            }
+
+            if (username.length < 3) {
+                showMessage(messageEl, 'Username must be at least 3 characters', 'error');
+                return;
+            }
+
+            if (password.length < 4) {
+                showMessage(messageEl, 'Password must be at least 4 characters', 'error');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showMessage(messageEl, 'Passwords do not match', 'error');
+                return;
+            }
+
+            if (users[username]) {
+                showMessage(messageEl, 'Username already exists', 'error');
+                return;
+            }
+
+            // Create user
+            const newUser = {
+                username: username,
+                password: password, // In a real app, this would be hashed
+                balance: 1000,
+                totalSpins: 0,
+                totalWins: 0,
+                totalLosses: 0,
+                totalWon: 0,
+                totalLost: 0,
+                gameHistory: [],
+                createdAt: new Date().toISOString()
+            };
+
+            users[username] = newUser;
+            localStorage.setItem('slotMachineUsers', JSON.stringify(users));
+            
+            // Auto login
+            currentUser = newUser;
+            localStorage.setItem('slotMachineCurrentUser', JSON.stringify(currentUser));
+            
+            showMessage(messageEl, 'Account created successfully!', 'success');
+            setTimeout(() => {
+                showUserSection();
+                loadUserData();
+            }, 1500);
+        }
+
+        function login() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const messageEl = document.getElementById('loginMessage');
+
+            if (!username || !password) {
+                showMessage(messageEl, 'Please fill in all fields', 'error');
+                return;
+            }
+
+            const user = users[username];
+            if (!user || user.password !== password) {
+                showMessage(messageEl, 'Invalid username or password', 'error');
+                return;
+            }
+
+            currentUser = user;
+            localStorage.setItem('slotMachineCurrentUser', JSON.stringify(currentUser));
+            
+            showMessage(messageEl, 'Login successful!', 'success');
+            setTimeout(() => {
+                showUserSection();
+                loadUserData();
+            }, 1500);
+        }
+
+        function playAsGuest() {
+            isGuest = true;
+            currentUser = {
+                username: 'Guest Player',
+                balance: 1000,
+                totalSpins: 0,
+                totalWins: 0,
+                totalLosses: 0,
+                totalWon: 0,
+                totalLost: 0,
+                gameHistory: []
+            };
+            showUserSection();
+            loadUserData();
+        }
+
+        function loadUserData() {
+            if (!currentUser) return;
+
+            document.getElementById('userName').textContent = currentUser.username;
+            document.getElementById('userBalance').textContent = `$${currentUser.balance}`;
+            document.getElementById('userSpins').textContent = currentUser.totalSpins;
+            document.getElementById('userWins').textContent = currentUser.totalWins;
+            
+            const winRate = currentUser.totalSpins > 0 ? 
+                ((currentUser.totalWins / currentUser.totalSpins) * 100).toFixed(1) : '0';
+            document.getElementById('userWinRate').textContent = `${winRate}%`;
+        }
+
+        function logout() {
+            if (isGuest) {
+                // For guests, just clear the session
+                currentUser = null;
+                isGuest = false;
+            } else {
+                // For registered users, save data before logout
+                if (currentUser) {
+                    users[currentUser.username] = currentUser;
+                    localStorage.setItem('slotMachineUsers', JSON.stringify(users));
+                }
+                localStorage.removeItem('slotMachineCurrentUser');
+                currentUser = null;
+            }
+            showWelcome();
+        }
+
+        function deleteAccount() {
+            if (isGuest) {
+                if (confirm('Are you sure you want to reset your guest session?')) {
+                    logout();
+                }
+                return;
+            }
+
+            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                delete users[currentUser.username];
+                localStorage.setItem('slotMachineUsers', JSON.stringify(users));
+                localStorage.removeItem('slotMachineCurrentUser');
+                currentUser = null;
+                showWelcome();
+            }
+        }
+
+        function startGame() {
+            // Save current user data
+            if (currentUser && !isGuest) {
+                users[currentUser.username] = currentUser;
+                localStorage.setItem('slotMachineUsers', JSON.stringify(users));
+            }
+            
+            // Open the complete slot machine game
+            window.open('slotmachine_complete.html', '_blank');
+        }
+
+        function showMessage(element, message, type) {
+            element.innerHTML = `<div class="message ${type}">${message}</div>`;
+        }
+
+        // Handle Enter key in forms
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                if (document.getElementById('registrationSection').classList.contains('hidden') === false) {
+                    register();
+                } else if (document.getElementById('loginSection').classList.contains('hidden') === false) {
+                    login();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

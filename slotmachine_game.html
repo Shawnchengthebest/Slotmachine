@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎰 Lucky Slot Machine - Game</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #2C3E50, #34495E);
+            min-height: 100vh;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .game-container {
+            background: rgba(52, 73, 94, 0.9);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+        .title { font-size: 2em; color: #F39C12; margin-bottom: 20px; }
+        .user-info { background: rgba(44, 62, 80, 0.8); padding: 15px; border-radius: 10px; margin-bottom: 20px; }
+        .slot-machine { background: #34495E; border: 3px solid #F39C12; border-radius: 15px; padding: 20px; margin: 20px 0; }
+        .reels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .reel { background: #2C3E50; border: 2px solid #F39C12; border-radius: 10px; padding: 20px; font-size: 3em; }
+        .controls { margin: 20px 0; }
+        .btn { background: #E74C3C; color: white; border: none; padding: 15px 30px; border-radius: 10px; cursor: pointer; margin: 5px; font-size: 1.1em; }
+        .btn:hover { background: #C0392B; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .message { padding: 15px; border-radius: 10px; margin: 15px 0; font-weight: bold; }
+        .win { background: #27AE60; }
+        .lose { background: #E74C3C; }
+        .back-btn { background: #95A5A6; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1 class="title">🎰 Lucky Slot Machine</h1>
+        
+        <div class="user-info" id="userInfo">
+            <div>Welcome, <span id="userName">Player</span>!</div>
+            <div>Balance: $<span id="userBalance">1000</span></div>
+        </div>
+        
+        <div class="slot-machine">
+            <div class="reels" id="reels">
+                <div class="reel" id="reel1">🎰</div>
+                <div class="reel" id="reel2">🎰</div>
+                <div class="reel" id="reel3">🎰</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn" id="spinBtn" onclick="spin()">🎰 SPIN!</button>
+            <div>Bet: $<span id="betAmount">10</span></div>
+        </div>
+        
+        <div id="message"></div>
+        
+        <button class="btn back-btn" onclick="goHome()">🏠 Back to Home</button>
+    </div>
+
+    <script>
+        // Load user data
+        let currentUser = JSON.parse(localStorage.getItem('slotMachineCurrentUser')) || {
+            username: 'Guest Player',
+            balance: 1000,
+            totalSpins: 0,
+            totalWins: 0
+        };
+        
+        let bet = 10;
+        let isSpinning = false;
+        const symbols = ['🍒', '🍊', '🍋', '💎', '7️⃣', '🎰', '🍀', '⭐'];
+        
+        // Initialize game
+        function initGame() {
+            document.getElementById('userName').textContent = currentUser.username;
+            document.getElementById('userBalance').textContent = currentUser.balance;
+            document.getElementById('betAmount').textContent = bet;
+        }
+        
+        function spin() {
+            if (isSpinning || currentUser.balance < bet) {
+                if (currentUser.balance < bet) {
+                    showMessage('Not enough balance!', 'lose');
+                }
+                return;
+            }
+            
+            isSpinning = true;
+            currentUser.balance -= bet;
+            currentUser.totalSpins++;
+            
+            document.getElementById('spinBtn').disabled = true;
+            document.getElementById('spinBtn').textContent = '🎰 SPINNING...';
+            
+            // Animate reels
+            const reels = [document.getElementById('reel1'), document.getElementById('reel2'), document.getElementById('reel3')];
+            let frame = 0;
+            const animate = () => {
+                reels.forEach(reel => reel.textContent = symbols[Math.floor(Math.random() * symbols.length)]);
+                frame++;
+                if (frame < 20) {
+                    setTimeout(animate, 100 + frame * 10);
+                } else {
+                    showResult();
+                }
+            };
+            animate();
+        }
+        
+        function showResult() {
+            const reels = [document.getElementById('reel1'), document.getElementById('reel2'), document.getElementById('reel3')];
+            const results = [
+                symbols[Math.floor(Math.random() * symbols.length)],
+                symbols[Math.floor(Math.random() * symbols.length)],
+                symbols[Math.floor(Math.random() * symbols.length)]
+            ];
+            
+            reels.forEach((reel, i) => reel.textContent = results[i]);
+            
+            // Check for win
+            const isWin = results[0] === results[1] && results[1] === results[2];
+            const payout = isWin ? 100 : 0;
+            
+            if (isWin) {
+                currentUser.balance += payout;
+                currentUser.totalWins++;
+                showMessage(`🎉 WINNER! You won $${payout}!`, 'win');
+            } else {
+                showMessage('😔 No win this time. Try again!', 'lose');
+            }
+            
+            // Update display
+            document.getElementById('userBalance').textContent = currentUser.balance;
+            document.getElementById('spinBtn').disabled = false;
+            document.getElementById('spinBtn').textContent = '🎰 SPIN!';
+            isSpinning = false;
+            
+            // Save user data
+            saveUserData();
+        }
+        
+        function showMessage(text, type) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = text;
+            messageEl.className = `message ${type}`;
+            setTimeout(() => messageEl.textContent = '', 3000);
+        }
+        
+        function saveUserData() {
+            if (currentUser.username !== 'Guest Player') {
+                const users = JSON.parse(localStorage.getItem('slotMachineUsers')) || {};
+                users[currentUser.username] = currentUser;
+                localStorage.setItem('slotMachineUsers', JSON.stringify(users));
+                localStorage.setItem('slotMachineCurrentUser', JSON.stringify(currentUser));
+            }
+        }
+        
+        function goHome() {
+            saveUserData();
+            window.close();
+            window.opener.focus();
+        }
+        
+        // Initialize when page loads
+        window.onload = initGame;
+    </script>
+</body>
+</html>
