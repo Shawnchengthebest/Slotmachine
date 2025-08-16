@@ -162,6 +162,10 @@ COMPLETE_GAME_HTML = """
                 <label style="font-size: 0.8em; color: #BDC3C7; margin-top: 10px; display: block;">Max Bet</label>
                 <input type="number" class="admin-input" id="maxBet" placeholder="100" min="10" max="10000">
                 <button class="admin-btn" onclick="setMaxBet()">Set Max Bet</button>
+                
+                <label style="font-size: 0.8em; color: #BDC3C7; margin-top: 10px; display: block;">Slot Speed (ms)</label>
+                <input type="number" class="admin-input" id="slotSpeed" placeholder="2500" min="500" max="10000">
+                <button class="admin-btn" onclick="setSlotSpeed()">Set Speed</button>
             </div>
             
             <div class="admin-section admin-hidden" id="adminControls4">
@@ -334,6 +338,7 @@ COMPLETE_GAME_HTML = """
         let isSpinning = false;
         let maxBet = 100;
         let customWinRate = 15.6;
+        let slotSpeed = 2500; // Default spin duration in milliseconds
         const symbols = ['🍒', '🍊', '🍋', '💎', '7️⃣', '🎰', '🍀', '⭐'];
         const payouts = {
             '🍒': 50, '🍊': 100, '🍋': 150, '💎': 200,
@@ -567,6 +572,17 @@ COMPLETE_GAME_HTML = """
             }
         }
 
+        function setSlotSpeed() {
+            if (!isAdminLoggedIn) return;
+            const newSpeed = parseInt(document.getElementById('slotSpeed').value);
+            if (newSpeed >= 500 && newSpeed <= 10000) {
+                slotSpeed = newSpeed;
+                showAdminMessage(`⚡ Slot speed set to ${newSpeed}ms`);
+            } else {
+                showAdminMessage('❌ Invalid speed! Use 500-10000ms');
+            }
+        }
+
         function showAdminMessage(message) {
             const statusEl = document.getElementById('accessStatus');
             statusEl.textContent = message;
@@ -675,7 +691,7 @@ COMPLETE_GAME_HTML = """
             const winMessageEl = document.getElementById('winMessage');
             winMessageEl.className = 'win-message';
             
-            const spinDuration = 2500;
+            const spinDuration = slotSpeed;
             const frameDuration = 20;
             const totalFrames = spinDuration / frameDuration;
             
